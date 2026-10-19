@@ -39,6 +39,13 @@
 
 Em setembro de 2026, a OpenAI anunciou uma proposta de solução para o Problema de Navier–Stokes Existência e Suavidade, com prova e formalização em Lean. A OpenAI declarou que **não reivindica o Prêmio do Milênio**. O Clay Mathematics Institute **não considera** propostas até pelo menos 2 anos após publicação. Portanto, o problema segue **aberto oficialmente**. Esse caso foi documentado em `skills/navier-stokes-millennium/skills.md` pelo ciclo dos 4 agentes (pesquisador, professor, aluno, QA).
 
+## Viagem no Tempo e Teleportação — Problemas Teoréticos
+
+- **CTCs (Gödel, Tipler, wormholes)**: métricas da relatividade geral admitem curvas fechadas tipo-tempo? Exigem matéria exótica (violação da NEC). Documentado em `skills/closed-timelike-curves/skills.md`.
+- **Teleportação quântica**: protocolo estabelecido (Bennett et al. 1993). Transmite informação, não matéria. Exige canal clássico. Documentado em `skills/quantum-teleportation/skills.md`.
+- **Proteção cronológica (Hawking)**: conjectura de que efeitos quânticos impedem CTCs. Em aberto. Documentado em `skills/chronology-protection/skills.md`.
+- **Complexidade de simular espaço-tempo com CTCs**: em NC ou P-completo? Modelo Aaronson–Watrous (P = PSPACE com CTCs) é teórico de computação, não física real. Documentado em `skills/spacetime-simulation-complexity/skills.md`.
+
 ## Como os agentes atuam sobre esses problemas
 
 1. **Pesquisador**: Levanta papers do arXiv e resultados parciais sobre o problema escolhido.

@@ -176,3 +176,8 @@ Core references consistent with this skill:
 - `skills/euler-blowup-parallel-verification/skills.md` — verificar explosão de Euler está em NC? (derivado)
 - `skills/bkm-criterion-parallel-complexity/skills.md` — complexidade paralela do integral BKM (derivado)
 - `skills/fluid-simulation-space-time/skills.md` — métodos espaço-tempo (Parareal) colocam fluidos em NC? (derivado)
+- `skills/time-travel-teleportation-foundation/skills.md` — fundamentos matemáticos para viagem no tempo (CTCs) e teleportação quântica, gerado a partir dos 4 problemas P vs NC × fluidos.
+- `skills/closed-timelike-curves/skills.md` — métricas de Gödel, Tipler, wormholes Morris–Thorne, matéria exótica.
+- `skills/quantum-teleportation/skills.md` — protocolo Bennett et al. (1993), estados de Bell, não-clonagem, canal clássico.
+- `skills/chronology-protection/skills.md` — conjectura de Hawking, polarização do vácuo, desigualdades quânticas.
+- `skills/spacetime-simulation-complexity/skills.md` — simular espaço-tempos com CTCs está em NC ou é P-completo? (Aaronson–Watrous).

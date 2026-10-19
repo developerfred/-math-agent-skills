@@ -1,0 +1,165 @@
+# Math Agent Skill
+
+**id:** math  
+**name:** Pure and Applied Mathematics for Agents  
+**description:** Comprehensive mathematics knowledge base for agentic systems. Covers pure mathematics (algebra, calculus, geometry, number theory, logic, probability, statistics) and applied mathematics (optimization, differential equations, linear algebra for ML, numerical methods, discrete math, cryptography fundamentals from a defensive/educational perspective). Designed to be used as reference context for LLM agents solving mathematical problems, proofs, modeling, and scientific computing.  
+**author:** codingsh <codingsh@pm.me>  
+**license:** MIT  
+**version:** 1.0.0  
+**language:** English  
+**triggers:** "math", "mathematics", "calculus", "algebra", "geometry", "statistics", "probability", "optimization", "differential equation", "linear algebra", "number theory", "proof", "derive", "solve equation", "matrix", "vector", "integral", "derivative", "numerical method", "discrete math", "set theory", "logic", "graph theory", "combinatorics", "fourier", "laplace", "complex analysis", "topology", "real analysis", "abstract algebra"
+
+---
+
+## Purpose
+
+This skill equips an agent with the mathematical foundation needed to:
+
+- Solve equations and systems (linear, nonlinear, differential, integral).
+- Construct and verify mathematical proofs.
+- Perform statistical analysis and probability modeling.
+- Optimize functions and models (constrained/unconstrained).
+- Work with vectors, matrices, and linear transformations.
+- Apply numerical methods when closed-form solutions are unavailable.
+- Model real-world phenomena using differential equations and dynamical systems.
+- Understand discrete structures (graphs, combinatorics, set theory, logic).
+- Reason about cryptographic primitives from a mathematical/educational standpoint (defensive only).
+
+---
+
+## 1. Pure Mathematics
+
+### 1.1 Algebra
+- **Groups, rings, fields:** definitions, axioms, homomorphisms, isomorphisms, ideals, quotient structures.
+- **Polynomials:** roots, factorization, Fundamental Theorem of Algebra, Galois theory basics.
+- **Linear algebra:** vector spaces, subspaces, basis, dimension, linear maps, matrices, determinants, eigenvalues/eigenvectors, diagonalization, Jordan form, singular value decomposition (SVD), inner product spaces, orthogonality, QR decomposition.
+- **Boolean algebra:** laws, simplification, Karnaugh maps, logic gates.
+
+### 1.2 Calculus & Real Analysis
+- **Single-variable calculus:** limits, continuity, derivatives (rules: product, quotient, chain), integrals (Riemann, Lebesgue intro), Fundamental Theorem of Calculus, techniques of integration (substitution, parts, partial fractions), improper integrals, series (power, Taylor, Maclaurin, Fourier), convergence tests.
+- **Multivariable calculus:** partial derivatives, gradient, divergence, curl, line/surface integrals, Green's/Stokes'/Gauss' theorems, Lagrange multipliers.
+- **Real analysis:** sequences and series, metric spaces, completeness, compactness, continuity, differentiability, uniform convergence, measure theory basics.
+
+### 1.3 Complex Analysis
+- Complex numbers, polar form, Euler's formula.
+- Holomorphic/analytic functions, Cauchy-Riemann equations.
+- Contour integration, Cauchy's integral theorem and formula, residue theorem, conformal mapping.
+
+### 1.4 Geometry & Topology
+- **Euclidean geometry:** axioms, congruence, similarity, conic sections.
+- **Analytic geometry:** lines, planes, quadrics, transformations.
+- **Differential geometry:** curves, surfaces, manifolds, curvature, geodesics.
+- **Topology:** open/closed sets, homeomorphisms, connectedness, compactness, fundamental group, homology basics.
+
+### 1.5 Number Theory
+- Divisibility, primes, Fundamental Theorem of Arithmetic.
+- Modular arithmetic, congruences, Chinese Remainder Theorem.
+- Diophantine equations, Fermat's Little Theorem, Euler's totient function, quadratic residues.
+- Primality testing, factorization (educational context), elliptic curves basics.
+
+### 1.6 Logic & Set Theory
+- Propositional and predicate logic, quantifiers, logical equivalence.
+- Proof techniques: direct, contradiction, contrapositive, induction, construction, exhaustion.
+- Set operations, cardinality, countable vs uncountable sets, axiom of choice, Zermelo-Fraenkel axioms.
+
+---
+
+## 2. Applied Mathematics
+
+### 2.1 Probability & Statistics
+- **Probability:** sample spaces, events, axioms, conditional probability, Bayes' theorem, independence, random variables (discrete/continuous), expectation, variance, moment generating functions.
+- **Distributions:** Bernoulli, Binomial, Poisson, Normal/Gaussian, Exponential, Chi-square, t-distribution, F-distribution, multivariate normal.
+- **Statistics:** descriptive statistics, point estimation, confidence intervals, hypothesis testing (z-test, t-test, ANOVA, chi-square), regression (linear, multiple, logistic), correlation, time series basics.
+
+### 2.2 Optimization
+- Unconstrained optimization: gradient descent, Newton's method, convexity, KKT conditions.
+- Constrained optimization: Lagrange multipliers, linear programming (simplex, duality), quadratic programming, integer programming.
+- Convex optimization: convex sets/functions, duality, interior-point methods.
+
+### 2.3 Differential Equations
+- **ODEs:** first-order (separable, linear, exact), second-order linear (homogeneous/non-homogeneous), systems of ODEs, Laplace transforms, series solutions, stability, phase portraits.
+- **PDEs:** heat equation, wave equation, Laplace's equation, separation of variables, Fourier series solutions, numerical schemes (finite difference, finite element).
+
+### 2.4 Numerical Methods
+- Root finding: bisection, Newton-Raphson, secant, fixed-point iteration.
+- Numerical integration: trapezoidal, Simpson's, Gaussian quadrature.
+- Linear systems: Gaussian elimination, LU decomposition, iterative methods (Jacobi, Gauss-Seidel, conjugate gradient).
+- Interpolation: Lagrange, spline, least squares fitting.
+- ODE solvers: Euler, Runge-Kutta, multistep methods.
+
+### 2.5 Discrete Mathematics & Combinatorics
+- Counting principles: permutations, combinations, pigeonhole principle, inclusion-exclusion.
+- Generating functions, recurrence relations, master theorem.
+- Graph theory: vertices/edges, paths, cycles, trees, connectivity, Eulerian/Hamiltonian, graph coloring, planar graphs, network flows (max-flow min-cut), shortest paths (Dijkstra, Bellman-Ford).
+
+### 2.6 Mathematical Modeling
+- Dimensional analysis, scaling, perturbation methods.
+- Population models (logistic, Lotka-Volterra), epidemic models (SIR/SIS).
+- Queueing theory basics, Markov chains, Monte Carlo simulation.
+
+---
+
+## 3. How the Agent Should Use This Skill
+
+When a user query matches any trigger above, the agent should:
+
+1. **Identify the domain:** classify the problem (algebra, calculus, statistics, optimization, etc.).
+2. **Select the method:** choose the appropriate theorem, formula, or algorithm.
+3. **Show the work:** present step-by-step derivation or computation, not just the final answer.
+4. **Validate:** check dimensions, boundary conditions, convergence, or plug the solution back into the original equation.
+5. **Code when useful:** offer a Python/NumPy/SciPy/Matlab snippet if numerical computation is appropriate.
+6. **Cite assumptions:** explicitly state any assumptions (e.g., "assuming f is continuous on [a,b]").
+
+### Example Interaction Pattern
+
+```
+User: Solve y'' + 4y = 0 with y(0)=1, y'(0)=0.
+Agent:
+1. Recognize: second-order linear homogeneous ODE with constant coefficients.
+2. Characteristic equation: r^2 + 4 = 0 => r = ±2i.
+3. General solution: y(t) = C1 cos(2t) + C2 sin(2t).
+4. Apply ICs: y(0)=1 => C1=1. y'(0)=0 => C2=0.
+5. Final: y(t) = cos(2t).
+```
+
+---
+
+## 4. Safety & Scope (Defensive/Educational Only)
+
+This skill is strictly for **legitimate mathematical education, scientific computing, and defensive security understanding**.
+
+- Cryptographic content (number theory, elliptic curves, modular arithmetic) is included **only** to explain how algorithms work conceptually (e.g., RSA, Diffie-Hellman, ECDSA) and how to use them correctly for protection.
+- This skill must **not** be used to break, weaken, bypass, or attack cryptographic systems, or to facilitate unauthorized access to data.
+- If a request involves offensive cryptanalysis or exploit development, the agent must decline and redirect to defensive security best practices.
+
+---
+
+## 5. Reference Knowledge Base
+
+Core references consistent with this skill:
+
+- Stewart, J. – *Calculus*
+- Axler, S. – *Linear Algebra Done Right*
+- Rudin, W. – *Principles of Mathematical Analysis*
+- Ahlfors, L. – *Complex Analysis*
+- Munkres, J. – *Topology*
+- Hardy, G.H., Wright, E.M. – *An Introduction to the Theory of Numbers*
+- Ross, S.M. – *Introduction to Probability and Statistics for Engineers and Scientists*
+- Boyd, S., Vandenberghe, L. – *Convex Optimization*
+- Cormen, T.H. et al. – *Introduction to Algorithms* (discrete math/graph portions)
+- ArXiv papers on numerical methods, optimization, and applied mathematics (as needed for state-of-the-art methods)
+
+---
+
+## 6. Suggested Toolchain for Agents
+
+- Python with NumPy, SciPy, SymPy, Matplotlib, Pandas, Statsmodels.
+- MATLAB / Octave or Julia for numerical computing.
+- LaTeX for typesetting proofs and formulas.
+- Lean / Coq / Isabelle for formal proof verification (advanced).
+- Jupyter notebooks for exploratory math.
+
+---
+
+**Maintainer:** codingsh <codingsh@pm.me>  
+**Repository:** github.com/developerfred/math-agent-skills

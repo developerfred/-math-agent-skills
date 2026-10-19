@@ -24,6 +24,23 @@
     --paper-ink-dim:#4a4a4a;
     --paper-border:#d4c3a5;
   }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    overflow:hidden;
+    line-height:1.5;
+  }
+  /* ---------- Background canvas ---------- */
+  #canvas-wrap{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+  }
+  canvas{display:block}
   /* ---------- Manuscript View ---------- */
   .manuscript-wrapper{
     position:relative;width:100%;max-width:900px;margin:0 auto;padding:20px;
@@ -67,23 +84,6 @@
   .manuscript-empty{
     font-style:italic;color:var(--paper-ink-dim);font-size:14px;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    overflow:hidden;
-    line-height:1.5;
-  }
-  /* ---------- Background canvas ---------- */
-  #canvas-wrap{
-    position:fixed;
-    inset:0;
-    z-index:0;
-    pointer-events:none;
-  }
-  canvas{display:block}
   /* ---------- UI shell ---------- */
   .shell{
     position:fixed;
@@ -228,7 +228,7 @@
 <div class="shell">
   <aside class="sidebar" id="sidebar">
     <h2><div class="dot"></div>Math Agent Skills</h2>
-    <h3>Skills (15)</h3>
+    <h3>Skills (45+)</h3>
     <ul>
       <li><a href="#" data-view="home" class="active"><span style="color:var(--accent)">▸</span> Pure & Applied Math</a></li>
       <li><a href="#" data-view="matrix"><span style="color:var(--accent-2)">▸</span> Execution Matrix</a></li>
@@ -689,6 +689,8 @@ const menuBtn = document.getElementById('menuBtn');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 
+let currentView = 'home';
+
 function showView(id){
   pages.forEach(p=>p.classList.remove('active'));
   const el=document.getElementById('view-'+id);
@@ -700,6 +702,11 @@ function showView(id){
   }
   sidebar.classList.remove('open');
   overlay.classList.remove('open');
+  currentView = id;
+  // Trigger manuscript typewriter if entering manuscript view
+  if(id === 'manuscript' && window.__manuscriptRestart){
+    window.__manuscriptRestart();
+  }
 }
 
 navButtons.forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
@@ -756,9 +763,9 @@ function makeRenderer(containerId){
   const el=document.getElementById(containerId);
   const scene=new THREE.Scene();
   scene.background=new THREE.Color(0x05080c);
-  const camera=new THREE.PerspectiveCamera(55, el.clientWidth/el.clientHeight, 0.1, 300);
+  const camera=new THREE.PerspectiveCamera(55, Math.max(el.clientWidth,1)/Math.max(el.clientHeight,1), 0.1, 300);
   const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-  renderer.setSize(el.clientWidth, el.clientHeight);
+  renderer.setSize(Math.max(el.clientWidth,1), Math.max(el.clientHeight,1));
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   el.appendChild(renderer.domElement);
   const controls=new OrbitControls(camera,renderer.domElement);
@@ -776,6 +783,16 @@ function loop(renderFn){
   animate();
 }
 
+// ---------- Global resize handler ----------
+window.addEventListener('resize',()=>{
+  // Background
+  // handled in bgStars
+  // All 3D views
+  Object.values(views3D).forEach(v=>{
+    if(v.resize) v.resize();
+  });
+});
+
 // ---------- Graph Theory ----------
 (function(){
   const {scene,camera,renderer,controls,el}=makeRenderer('graph-canvas');
@@ -783,7 +800,6 @@ function loop(renderFn){
   let mesh, nodes=[], edges=[], physics=true;
   function build(){
     if(mesh){scene.remove(mesh);mesh.geometry.dispose();mesh.material.dispose();}
-    // remove old lines
     scene.children.forEach(c=>{ if(c instanceof THREE.LineSegments) scene.remove(c); });
     nodes=[];edges=[];
     const N=44;
@@ -837,12 +853,13 @@ function loop(renderFn){
     renderer.render(scene,camera);
   }
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.graphs={resize:()=>{}};
+  views3D.graphs={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
   document.getElementById('graph-reset').addEventListener('click',build);
   document.getElementById('graph-physics').addEventListener('click',()=>{physics=!physics;});
 })();
@@ -880,12 +897,13 @@ function loop(renderFn){
   build('sin');
   function animate(){if(mesh)mesh.rotation.y+=.005;controls.update();renderer.render(scene,camera);}
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.surface={resize:()=>{}};
+  views3D.surface={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
   document.getElementById('surf-sin').addEventListener('click',()=>build('sin'));
   document.getElementById('surf-torus').addEventListener('click',()=>build('torus'));
   document.getElementById('surf-mobius').addEventListener('click',()=>build('mobius'));
@@ -921,13 +939,14 @@ function loop(renderFn){
   }
   function animate(){controls.update();renderer.render(scene,camera);}
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.left=-el.clientWidth/16;camera.right=el.clientWidth/16;
-    camera.top=el.clientHeight/16;camera.bottom=-el.clientHeight/16;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.gpu={resize:()=>{}};
+  views3D.gpu={
+    resize:()=>{
+      camera.left=-el.clientWidth/16;camera.right=el.clientWidth/16;
+      camera.top=el.clientHeight/16;camera.bottom=-el.clientHeight/16;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
   document.getElementById('gpu-lambda').addEventListener('input',(e)=>{lambda=parseFloat(e.target.value);upd();});
   upd();
 })();
@@ -981,12 +1000,13 @@ function loop(renderFn){
   gen();
   function animate(){controls.update();renderer.render(scene,camera);}
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.parallel={resize:()=>{}};
+  views3D.parallel={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
   document.getElementById('dag-regen').addEventListener('click',gen);
 })();
 
@@ -1021,12 +1041,13 @@ function loop(renderFn){
     renderer.render(scene,camera);
   }
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.navier={resize:()=>{}};
+  views3D.navier={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
   document.getElementById('ns-viscosity').addEventListener('click',()=>{visc=Math.max(.3,visc-.2);});
   document.getElementById('ns-turbulence').addEventListener('click',()=>{visc=Math.min(2,visc+.2);});
 })();
@@ -1058,12 +1079,13 @@ function loop(renderFn){
     renderer.render(scene,camera);
   }
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.euler={resize:()=>{}};
+  views3D.euler={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
   document.getElementById('euler-stretch').addEventListener('click',()=>{t+=2;});
   document.getElementById('euler-reset').addEventListener('click',()=>{t=0;});
 })();
@@ -1092,12 +1114,13 @@ function loop(renderFn){
     renderer.render(scene,camera);
   }
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.bkm={resize:()=>{}};
+  views3D.bkm={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
   document.getElementById('bkm-alpha1').addEventListener('click',()=>{alpha=.5;});
   document.getElementById('bkm-alpha2').addEventListener('click',()=>{alpha=1.3;});
 })();
@@ -1126,12 +1149,13 @@ function loop(renderFn){
     renderer.render(scene,camera);
   }
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.pnc={resize:()=>{}};
+  views3D.pnc={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
 })();
 
 // ---------- CTCs ----------
@@ -1152,12 +1176,13 @@ function loop(renderFn){
     renderer.render(scene,camera);
   }
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.ctc={resize:()=>{}};
+  views3D.ctc={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
 })();
 
 // ---------- Quantum Teleport ----------
@@ -1177,12 +1202,13 @@ function loop(renderFn){
     renderer.render(scene,camera);
   }
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.teleport={resize:()=>{}};
+  views3D.teleport={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
 })();
 
 // ---------- Chronology Protection ----------
@@ -1202,12 +1228,13 @@ function loop(renderFn){
     renderer.render(scene,camera);
   }
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.chronology={resize:()=>{}};
+  views3D.chronology={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
 })();
 
 // ---------- Spacetime ----------
@@ -1229,12 +1256,13 @@ function loop(renderFn){
     renderer.render(scene,camera);
   }
   loop(animate);
-  window.addEventListener('resize',()=>{
-    camera.aspect=el.clientWidth/el.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(el.clientWidth,el.clientHeight);
-  });
-  views3D.spacetime={resize:()=>{}};
+  views3D.spacetime={
+    resize:()=>{
+      camera.aspect=el.clientWidth/el.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(el.clientWidth,el.clientHeight);
+    }
+  };
 })();
 
 // ---------- Manuscript View Typewriter ----------
@@ -1247,33 +1275,32 @@ function loop(renderFn){
   if(!textEl) return;
 
   const fullText=textEl.textContent;
-  textEl.textContent='';
   let i=0;
   let isTyping=true;
+  let timeoutId=null;
 
   function typeNext(){
     if(!isTyping) return;
     if(i<fullText.length){
       textEl.textContent+=fullText.charAt(i);
       i++;
-      setTimeout(typeNext, 35 + Math.random()*40);
+      timeoutId=setTimeout(typeNext, 35 + Math.random()*40);
     } else {
       cursorEl.style.display='none';
     }
   }
 
-  // Start typing when manuscript view is shown
-  const origShowView=window.showView;
-  window.showView=function(id){
-    origShowView(id);
-    if(id==='manuscript'){
-      textEl.textContent='';
-      i=0;
-      cursorEl.style.display='inline-block';
-      isTyping=true;
-      typeNext();
-    }
+  window.__manuscriptRestart=function(){
+    if(timeoutId) clearTimeout(timeoutId);
+    textEl.textContent='';
+    i=0;
+    cursorEl.style.display='inline-block';
+    isTyping=true;
+    typeNext();
   };
+
+  // Initial type
+  typeNext();
 
   // Mode switching
   modeBtns.forEach(btn=>{

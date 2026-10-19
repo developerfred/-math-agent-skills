@@ -181,3 +181,4 @@ Core references consistent with this skill:
 - `skills/quantum-teleportation/skills.md` — protocolo Bennett et al. (1993), estados de Bell, não-clonagem, canal clássico.
 - `skills/chronology-protection/skills.md` — conjectura de Hawking, polarização do vácuo, desigualdades quânticas.
 - `skills/spacetime-simulation-complexity/skills.md` — simular espaço-tempos com CTCs está em NC ou é P-completo? (Aaronson–Watrous).
+- `skills/riemann-hypothesis/skills.md` — Hipótese de Riemann (Millennium Prize, aberto desde 1859), ciclo dos 4 agentes com estado-da-arte, testes numéricos de zeros e 4 problemas derivados.

@@ -163,3 +163,8 @@ Core references consistent with this skill:
 
 **Maintainer:** codingsh <codingsh@pm.me>  
 **Repository:** github.com/developerfred/math-agent-skills
+
+### Descobertas geradas pelo ciclo multi-agente
+- `skills/collatz-stopping-time/skills.md` — heurística de tempo de parada da Conjectura de Collatz (status: aberto/heurístico), gerada pelos agentes pesquisador, professor, aluno e QA.
+- `skills/parallel-gpu-memory/skills.md` — matemática de paralelismo, GPU e memória RAM (leis de Amdahl/Gustafson, modelo Roofline, AMAT, Little's Law, GEMM, problemas em aberto como Memory Wall e P vs NC), gerada pelos 4 agentes.
+- `skills/skills-graph/skills.md` — dynamic learning site on GitHub Pages with Three.js visualizations (graph networks, parametric surfaces, GPU memory hierarchy, parallel DAGs, multi-agent loop).

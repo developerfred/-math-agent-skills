@@ -4,7 +4,7 @@
 **name:** Open Problems in Mathematics  
 **description:** Catálogo de problemas matemáticos ainda não resolvidos, usados como desafios para o ciclo multi-agente (pesquisa → ensino → aprendizado → contestação → registro). Conteúdo esteducional e teórico.  
 **author:** codingsh <codingsh@pm.me>  
-**triggers:** "unsolved", "open problem", "millennium", "conjecture", "challenge", "riddle", "proof", "collatz", "goldbach", "riemann", "navier-stokes", "p vs np"
+**triggers:** "unsolved", "open problem", "millennium", "conjecture", "challenge", "riddle", "proof", "collatz", "goldbach", "riemann", "navier-stokes", "p vs np", "parallel", "gpu", "memory", "amdahl", "roofline", "p vs nc", "memory wall"
 
 ---
 
@@ -25,6 +25,14 @@
 - **Conjectura de Collatz (3n+1)**: Toda sequência definida por n → n/2 (par) ou 3n+1 (ímpar) eventualmente chega a 1? (Aberto).
 - **Conjectura de Legendre**: Entre n² e (n+1)² sempre há um primo? (Aberto).
 - **Conjectura de Brocard**: n! + 1 = m² tem apenas soluções (4,5), (5,11), (7,71)? (Aberto).
+
+## Paralelismo, GPU e Memória — Problemas em Aberto
+
+- **Memory Wall**: A intensidade aritmética cresce rápido o suficiente para superar o gap de latência entre CPU/GPU e DRAM? (Aberto; problema de co-design arquitetural sem limite de forma fechada.)
+- **Tamanho ótimo de tile (blocking)**: Para hierarquias de cache arbitrárias e formatos de tensor, encontrar fatores de bloqueio globalmente ótimos é NP-hard no geral; heurísticas dominam. (Aberto)
+- **Paralelismo irregular**: Algoritmos de grafo (BFS, PageRank, SpMV) têm desbalanceamento de carga; limites teóricos para travessia paralela work-efficient permanecem abertos para muitas classes. (Aberto)
+- **Pressão de registradores vs ocupação GPU**: Modelo analítico para alocação ótima de registradores sob restrições de ocupação é um problema de otimização aberto. (Aberto)
+- **P vs NC**: Todo problema eficientemente solúvel em paralelo (NC) é igual a P? Questão fundamental de complexidade paralela, relacionada a P vs NP. (Aberto)
 
 ## Como os agentes atuam sobre esses problemas
 

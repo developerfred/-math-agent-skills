@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Agent Skills — Dynamic Learning (Three.js)</title>
+<meta name="description" content="Pure and applied mathematics for agentic systems — interactive Three.js visualizations: graphs, surfaces, GPU memory, parallel DAGs.">
+<style>
+  :root{
+    --bg:#05070a;
+    --panel:#0e141e;
+    --accent:#22d3ee;
+    --accent-2:#a78bfa;
+    --text:#e2e8f0;
+    --muted:#94a3b8;
+    --border:#1e293b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    overflow:hidden;
+  }
+  #canvas-wrap{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    background:radial-gradient(circle at 50% 50%, #0b1220 0%, #05070a 100%);
+  }
+  canvas{display:block}
+  .ui{
+    position:fixed;
+    inset:0;
+    z-index:10;
+    pointer-events:none;
+  }
+  .header{
+    pointer-events:auto;
+    position:absolute;
+    top:0; left:0; right:0;
+    height:64px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 24px;
+    background:rgba(14,20,30,0.6);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+    z-index:20;
+  }
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-0.02em;font-size:1.1rem}
+  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+  .nav{display:flex;gap:8px}
+  .nav button{
+    background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:8px;font-size:0.85rem;cursor:pointer;transition:all .2s;
+  }
+  .nav button:hover{color:var(--text);border-color:var(--muted)}
+  .nav button.active{color:var(--accent);border-color:var(--accent);background:rgba(34,211,238,0.08)}
+  .sidebar{
+    pointer-events:auto;
+    position:absolute;
+    top:64px; left:0; bottom:0;
+    width:340px;
+    background:rgba(14,20,30,0.7);
+    backdrop-filter:blur(12px);
+    border-right:1px solid var(--border);
+    overflow-y:auto;
+    padding:20px;
+    z-index:20;
+    transform:translateX(-100%);
+    transition:transform .3s ease;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .sidebar h3{font-size:0.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:20px 0 10px}
+  .sidebar ul{list-style:none}
+  .sidebar li{margin:6px 0}
+  .sidebar a{color:var(--muted);text-decoration:none;font-size:0.9rem;display:block;padding:6px 8px;border-radius:6px;transition:.2s}
+  .sidebar a:hover{background:var(--panel);color:var(--text)}
+  .sidebar a.active{color:var(--accent);background:rgba(34,211,238,0.1)}
+  .toggle{
+    position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    background:transparent;border:none;color:var(--text);font-size:1.5rem;cursor:pointer;z-index:25;
+  }
+  .content{
+    position:absolute;
+    top:64px;left:0;right:0;bottom:0;
+    padding:24px;
+    overflow-y:auto;
+    pointer-events:auto;
+  }
+  .card{
+    background:rgba(14,20,30,0.5);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:16px;
+    backdrop-filter:blur(6px);
+  }
+  .card h2{font-size:1rem;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .card p{color:var(--muted);font-size:0.9rem;line-height:1.5;margin-bottom:12px}
+  .badge{display:inline-block;font-size:0.7rem;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:10px;background:var(--panel);border:1px solid var(--border);color:var(--muted);margin-right:6px}
+  .controls{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .controls button{
+    background:var(--panel);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;font-size:0.85rem;cursor:pointer;
+  }
+  .controls button:hover{border-color:var(--accent);color:var(--accent)}
+  .stats{display:flex;gap:12px;margin-top:16px}
+  .stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;min-width:110px}
+  .stat .val{font-size:1.25rem;font-weight:700;color:var(--accent-2)}
+  .stat .lab{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .footer{
+    position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+    font-size:0.7rem;color:var(--muted);z-index:20;pointer-events:none
+  }
+  .overlay{
+    position:absolute;inset:0;background:rgba(5,7,10,0.9);z-index:30;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px
+  }
+  .overlay h2{color:var(--accent)}
+  .overlay button{background:var(--accent);color:#000;border:none;padding:10px 24px;border-radius:8px;font-weight:700;cursor:pointer}
+  @media (max-width:768px){.sidebar{width:100%}}
+</style>
+</head>
+<body>
+
+<div id="canvas-wrap"><canvas id="bg"></canvas></div>
+
+<div class="ui">
+  <div class="header">
+    <div class="brand"><div class="dot"></div> MATH AGENT SKILLS</div>
+    <div class="nav">
+      <button class="active" data-view="home">Overview</button>
+      <button data-view="graphs">Graph Theory</button>
+      <button data-view="surface">Surfaces</button>
+      <button data-view="gpu">GPU & Memory</button>
+      <button data-view="parallel">Parallelism</button>
+      <button data-view="agents">Multi-Agent</button>
+    </div>
+  </div>
+
+  <button class="toggle" id="toggle">☰</button>
+
+  <div class="sidebar" id="sidebar">
+    <h3>Skills</h3>
+    <ul>
+      <li><a href="#" data-view="home"><span class="badge">base</span> Pure & Applied Math</a></li>
+      <li><a href="#" data-view="graphs"><span class="badge">graph</span> Graph Theory</a></li>
+      <li><a href="#" data-view="surface"><span class="badge">analysis</span> Surfaces & Curves</a></li>
+      <li><a href="#" data-view="gpu"><span class="badge">gpu</span> GPU & Memory</a></li>
+      <li><a href="#" data-view="parallel"><span class="badge">parallel</span> Parallelism</a></li>
+      <li><a href="#" data-view="agents"><span class="badge">workflow</span> Multi-Agent Loop</a></li>
+    </ul>
+    <h3>Open Problems</h3>
+    <ul>
+      <li><a href="#" style="color:var(--accent-2)">P vs NP</a></li>
+      <li><a href="#" style="color:var(--accent-2)">Riemann Hypothesis</a></li>
+      <li><a href="#" style="color:var(--accent-2)">Collatz 3n+1</a></li>
+      <li><a href="#" style="color:var(--accent-2)">Memory Wall</a></li>
+      <li><a href="#" style="color:var(--accent-2)">P vs NC</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <section id="view-home" class="view">
+      <div class="card">
+        <h2>Welcome to Math Agent Skills</h2>
+        <p>A public repository of agent skills focused on pure and applied mathematics, built for agentic systems. Author: <strong>codingsh &lt;codingsh@pm.me&gt;</strong> · Repository: <strong>developerfred/-math-agent-skills</strong></p>
+        <p>Use the top navigation to explore interactive Three.js visualizations tied to each mathematical domain. Every concept below is backed by a skill file in <code>skills/</code>.</p>
+        <div class="stats">
+          <div class="stat"><div class="val">5</div><div class="lab">Agent Skills</div></div>
+          <div class="stat"><div class="val">4</div><div class="lab">Agents in Loop</div></div>
+          <div class="stat"><div class="val">7</div><div class="lab">Open Problems</div></div>
+          <div class="stat"><div class="val">3D</div><div class="lab">Visualizations</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>How the Multi-Agent Loop Works</h2>
+        <p style="margin-bottom:10px"><strong>Pesquisador</strong> → levanta papers (arXiv) e problemas em aberto.</p>
+        <p style="margin-bottom:10px"><strong>Professor</strong> → estrutura didática e provas passo a passo.</p>
+        <p style="margin-bottom:10px"><strong>Aluno</strong> → deriva do zero, testa exemplos numéricos, aponta lacunas.</p>
+        <p style="margin-bottom:0"><strong>QA</strong> → contesta, busca contra-exemplos, valida rigor formal.</p>
+      </div>
+    </section>
+
+    <section id="view-graphs" class="view" style="display:none">
+      <div class="card">
+        <h2>Graph Theory — Interactive Network</h2>
+        <p>Weighted graph visualization representing mathematical concepts as nodes and relationships as edges. Colors indicate degree centrality; thickness indicates edge weight.</p>
+        <div class="controls">
+          <button id="graph-reset">Reset Layout</button>
+          <button id="graph-physics">Toggle Physics</button>
+          <span id="graph-info">Nodes: 0 · Edges: 0</span>
+        </div>
+        <div id="graph-canvas" style="height:420px;background:#0a0f19;border:1px solid var(--border);border-radius:8px"></div>
+      </div>
+    </section>
+
+    <section id="view-surface" class="view" style="display:none">
+      <div class="card">
+        <h2>Surfaces & Curves — 3D Parametric Plotter</h2>
+        <p>Explore mathematical surfaces in 3D: z = sin(x)·cos(y), Möbius strip, torus, and saddle. Rotate to inspect curvature and gradient behavior.</p>
+        <div class="controls">
+          <button id="surf-sin">sin(x)·cos(y)</button>
+          <button id="surf-torus">Torus</button>
+          <button id="surf-mobius">Möbius Strip</button>
+          <button id="surf-saddle">Saddle z=x²−y²</button>
+          <span id="surf-info">Surface: sin(x)·cos(y)</span>
+        </div>
+        <div id="surface-canvas" style="height:420px;background:#0a0f19;border:1px solid var(--border);border-radius:8px"></div>
+      </div>
+    </section>
+
+    <section id="view-gpu" class="view" style="display:none">
+      <div class="card">
+        <h2>GPU & Memory Hierarchy</h2>
+        <p>3D representation of the memory hierarchy (registers → L1 → L2 → L3 → DRAM) with latency arrows. Adjust request rate to see Little's Law (N = λ·R) in action.</p>
+        <div class="controls">
+          <label style="color:var(--muted);font-size:.8rem">Request rate λ:</label>
+          <input type="range" id="gpu-lambda" min="0.1" max="5" step="0.1" value="1">
+          <span id="gpu-lat">Latency R: — cycles</span>
+          <span id="gpu-n">Outstanding N: —</span>
+        </div>
+        <div id="gpu-canvas" style="height:420px;background:#0a0f19;border:1px solid var(--border);border-radius:8px"></div>
+      </div>
+    </section>
+
+    <section id="view-parallel" class="view" style="display:none">
+      <div class="card">
+        <h2>Parallelism — Work / Span DAG</h2>
+        <p>Directed acyclic graph showing tasks as nodes and dependencies as edges. Work T₁ = total nodes; Span T∞ = critical path. Parallelism = T₁/T∞.</p>
+        <div class="controls">
+          <button id="dag-regen">Regenerate DAG</button>
+          <span id="dag-info">T₁: 0 · T∞: 0 · Parallelism: 0×</span>
+        </div>
+        <div id="parallel-canvas" style="height:420px;background:#0a0f19;border:1px solid var(--border);border-radius:8px"></div>
+      </div>
+    </section>
+
+    <section id="view-agents" class="view" style="display:none">
+      <div class="card">
+        <h2>Multi-Agent Rebuttal Loop</h2>
+        <p>Every cycle produces a new skill. The agents rebut, validate, and document discoveries in <code>skills/</code> with conventional commits.</p>
+        <div class="stats">
+          <div class="stat"><div class="val">🔍</div><div class="lab">Researcher</div></div>
+          <div class="stat"><div class="val">👨‍🏫</div><div class="lab">Teacher</div></div>
+          <div class="stat"><div class="val">🎓</div><div class="lab">Student</div></div>
+          <div class="stat"><div class="val">🛡️</div><div class="lab">QA</div></div>
+        </div>
+        <div style="margin-top:14px;color:var(--muted);font-size:.85rem;line-height:1.6">
+          <div>1. Researcher raises an open problem (e.g. Memory Wall, Collatz).</div>
+          <div>2. Teacher structures the didactic explanation.</div>
+          <div>3. Student derives from zero and tests numeric examples.</div>
+          <div>4. QA contests with counterexamples and edge cases.</div>
+          <div>5. Consensus → new skill file in <code>skills/</code>.</div>
+          <div>6. Commit with <code>feat(scope): ...</code> and push to GitHub.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="footer">Math Agent Skills · codingsh &lt;codingsh@pm.me&gt; · GitHub Pages + Three.js · Defensive/educational use only</div>
+</div>
+
+<div class="overlay" id="overlay">
+  <h2 id="overlay-title">Done</h2>
+  <p id="overlay-msg" style="color:var(--muted)"></p>
+  <button id="overlay-close">Close</button>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ---------- Global UI ----------
+const views = document.querySelectorAll('.view');
+const navButtons = document.querySelectorAll('.nav button');
+const sidebarLinks = document.querySelectorAll('.sidebar a');
+const toggle = document.getElementById('toggle');
+const sidebar = document.getElementById('sidebar');
+
+function showView(id){
+  views.forEach(v=>v.style.display='none');
+  const el=document.getElementById('view-'+id);
+  if(el) el.style.display='block';
+  navButtons.forEach(b=>b.classList.toggle('active', b.dataset.view===id));
+  sidebarLinks.forEach(a=>{
+    const active = a.dataset.view===id;
+    a.classList.toggle('active', active);
+  });
+  if(typeof window.__threeViews==='object' && window.__threeViews[id]){
+    window.__threeViews[id].resize && window.__threeViews[id].resize();
+  }
+}
+
+navButtons.forEach(b=>{
+  b.addEventListener('click',()=>showView(b.dataset.view));
+});
+sidebarLinks.forEach(a=>{
+  a.addEventListener('click',(e)=>{
+    e.preventDefault();
+    showView(a.dataset.view);
+    sidebar.classList.remove('open');
+  });
+});
+toggle.addEventListener('click',()=>sidebar.classList.toggle('open'));
+
+// ---------- Three.js Base ----------
+function createScene(containerId){
+  const container=document.getElementById(containerId);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(60, container.clientWidth/container.clientHeight, 0.1, 1000);
+  const renderer=new THREE.WebGLRenderer({canvas:document.getElementById('bg'), antialias:true, alpha:true});
+  // renderer is shared below; this helper returns scene+camera only
+  return {scene, camera};
+}
+
+const views3D={};
+window.__threeViews=views3D;
+
+// ---------- Background starfield (always on) ----------
+(function bgStars(){
+  const canvas=document.getElementById('bg');
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer=new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  const geo=new THREE.BufferGeometry();
+  const count=4000;
+  const pos=new Float32Array(count*3);
+  for(let i=0;i<count*3;i++) pos[i]=(Math.random()-0.5)*200;
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const mat=new THREE.PointsMaterial({color:0xffffff,size:0.7,transparent:true,opacity:0.6});
+  const stars=new THREE.Points(geo,mat);
+  scene.add(stars);
+  camera.position.z=60;
+  function animate(){
+    requestAnimationFrame(animate);
+    stars.rotation.y += 0.0005;
+    stars.rotation.x += 0.0002;
+    renderer.render(scene,camera);
+  }
+  animate();
+  window.addEventListener('resize',()=>{
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+  });
+})();
+
+// ---------- Graph Theory View ----------
+(function graphView(){
+  let scene,camera,renderer,controls,mesh,nodes=[],edges=[],physics=true;
+  let raycaster=new THREE.Raycaster(), mouse=new THREE.Vector2();
+  const container=document.getElementById('graph-canvas');
+  if(!container) return;
+
+  function init(){
+    scene=new THREE.Scene();
+    scene.background=new THREE.Color(0x0a0f19);
+    camera=new THREE.PerspectiveCamera(50, container.clientWidth/container.clientHeight, 0.1, 1000);
+    camera.position.set(0,0,40);
+    renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+    renderer.setSize(container.clientWidth,container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    container.appendChild(renderer.domElement);
+    controls=new OrbitControls(camera,renderer.domElement);
+    controls.enableDamping=true;
+    const ambient=new THREE.AmbientLight(0xffffff,0.4); scene.add(ambient);
+    const dir=new THREE.DirectionalLight(0x22d3ee,1); dir.position.set(10,20,10); scene.add(dir);
+
+    buildGraph();
+    animate();
+    window.addEventListener('resize',onResize);
+    document.getElementById('graph-reset').addEventListener('click',buildGraph);
+    document.getElementById('graph-physics').addEventListener('click',()=>{physics=!physics;});
+  }
+
+  function buildGraph(){
+    if(mesh){scene.remove(mesh);mesh.geometry.dispose();mesh.material.dispose();}
+    nodes=[]; edges=[];
+    const N=40;
+    // math concept nodes
+    const labels=['P vs NP','Riemann','Collatz','Graph','GPU','Memory','AMAT','Roofline','SVD','Euler','Prime','Zeta','NASH','DAG','Work','Span'];
+    for(let i=0;i<N;i++){
+      const theta=Math.random()*Math.PI*2, phi=Math.acos(2*Math.random()-1), r=12+Math.random()*8;
+      nodes.push({id:i,label:labels[i%labels.length],x:r*Math.sin(phi)*Math.cos(theta),y:r*Math.sin(phi)*Math.sin(theta),z:r*Math.cos(phi),vx:(Math.random()-0.5)*0.02,vy:(Math.random()-0.5)*0.02,vz:(Math.random()-0.5)*0.02,degree:0});
+    }
+    for(let i=0;i<N;i++) for(let j=i+1;j<N;j++){
+      if(Math.random()<0.12){
+        edges.push({a:i,b:j,w:0.5+Math.random()});
+        nodes[i].degree++; nodes[j].degree++;
+      }
+    }
+    document.getElementById('graph-info').textContent=`Nodes: ${N} · Edges: ${edges.length}`;
+
+    const edgeGeo=new THREE.BufferGeometry(), edgePos=[], edgeColors=[];
+    const nodeGeo=new THREE.SphereGeometry(0.45,16,16);
+    const mats=[];
+    for(let i=0;i<N;i++){
+      const hue= (i/N)*0.6 + 0.55; // cyan to purple
+      const color=new THREE.Color().setHSL(hue,0.8,0.6);
+      const m=new THREE.MeshStandardMaterial({color});
+      mats.push(m);
+    }
+    const instMesh=new THREE.InstancedMesh(nodeGeo,mats,N);
+    const dummy=new THREE.Object3D();
+    const nodeColors=[];
+
+    edges.forEach(e=>{
+      const A=nodes[e.a],B=nodes[e.b];
+      edgePos.push(A.x,A.y,A.z,B.x,B.y,B.z);
+      const c=new THREE.Color().setHSL(0.6,0.4,0.3+0.2*e.w);
+      edgeColors.push(c.r,c.g,c.b,c.r,c.g,c.b);
+    });
+    edgeGeo.setAttribute('position',new THREE.Float32BufferAttribute(edgePos,3));
+    edgeGeo.setAttribute('color',new THREE.Float32BufferAttribute(edgeColors,3));
+    const edgeMat=new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:0.35});
+    const lines=new THREE.LineSegments(edgeGeo,edgeMat);
+    scene.add(lines);
+
+    nodes.forEach((n,i)=>{
+      dummy.position.set(n.x,n.y,n.z);
+      dummy.updateMatrix();
+      instMesh.setMatrixAt(i,dummy.matrix);
+    });
+    mesh=instMesh;
+    scene.add(mesh);
+
+    raycaster.params.Points={threshold:0.1};
+    animateFrame();
+  }
+
+  function animateFrame(){
+    if(physics){
+      nodes.forEach(n=>{
+        // repulsion center + spring to center
+        const d=Math.sqrt(n.x*n.x+n.y*n.y+n.z*n.z);
+        n.vx += -n.x*0.001; n.vy += -n.y*0.001; n.vz += -n.z*0.001;
+        n.x+=n.vx; n.y+=n.vy; n.z+=n.vz;
+      });
+      const dummy=new THREE.Object3D();
+      nodes.forEach((n,i)=>{dummy.position.set(n.x,n.y,n.z);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);});
+      mesh.instanceMatrix.needsUpdate=true;
+      // update line positions
+      const pos=mesh.geometry.attributes.position; // not lines; lines separate
+    }
+    controls.update();
+    renderer.render(scene,camera);
+    requestAnimationFrame(animateFrame);
+  }
+
+  function onResize(){
+    camera.aspect=container.clientWidth/container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth,container.clientHeight);
+  }
+  views3D.graphs={resize:onResize};
+  init();
+})();
+
+// ---------- Surfaces View ----------
+(function surfaceView(){
+  let scene,camera,renderer,controls,current='sin';
+  const container=document.getElementById('surface-canvas');
+  if(!container) return;
+  let mesh;
+  const params={uSeg:60,vSeg:60};
+
+  function init(){
+    scene=new THREE.Scene();
+    scene.background=new THREE.Color(0x0a0f19);
+    camera=new THREE.PerspectiveCamera(55, container.clientWidth/container.clientHeight, 0.1, 200);
+    camera.position.set(0,18,30);
+    renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+    renderer.setSize(container.clientWidth,container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    container.appendChild(renderer.domElement);
+    controls=new OrbitControls(camera,renderer.domElement);
+    controls.enableDamping=true;
+    const ambient=new THREE.AmbientLight(0xffffff,0.5); scene.add(ambient);
+    const dir=new THREE.DirectionalLight(0x22d3ee,1); dir.position.set(10,20,10); scene.add(dir);
+    const dir2=new THREE.DirectionalLight(0xa78bfa,0.6); dir2.position.set(-10,-5,10); scene.add(dir2);
+
+    updateSurface('sin');
+    animate();
+    window.addEventListener('resize',onResize);
+    document.getElementById('surf-sin').addEventListener('click',()=>updateSurface('sin'));
+    document.getElementById('surf-torus').addEventListener('click',()=>updateSurface('torus'));
+    document.getElementById('surf-mobius').addEventListener('click',()=>updateSurface('mobius'));
+    document.getElementById('surf-saddle').addEventListener('click',()=>updateSurface('saddle'));
+  }
+
+  function surfaceFun(type,u,v){
+    // u,v in [0,1]
+    if(type==='sin'){
+      const x=(u-0.5)*8, y=(v-0.5)*8;
+      return {x,y,z:Math.sin(x)*Math.cos(y)*3};
+    }
+    if(type==='saddle'){
+      const x=(u-0.5)*6, y=(v-0.5)*6;
+      return {x,y,z:(x*x-y*y)*0.6};
+    }
+    if(type==='torus'){
+      const R=8,r=3, phi=u*Math.PI*2, theta=v*Math.PI*2;
+      return {x:(R+r*Math.cos(theta))*Math.cos(phi), y:(R+r*Math.cos(theta))*Math.sin(phi), z:r*Math.sin(theta)};
+    }
+    if(type==='mobius'){
+      const R=5, w=(v-0.5)*2, uu=u*Math.PI*2;
+      const x=(R+w*Math.cos(uu/2))*Math.cos(uu);
+      const y=(R+w*Math.cos(uu/2))*Math.sin(uu);
+      const z=w*Math.sin(uu/2)*3;
+      return {x,y,z};
+    }
+    return {x:0,y:0,z:0};
+  }
+
+  function updateSurface(type){
+    if(mesh){scene.remove(mesh);mesh.geometry.dispose();mesh.material.dispose();}
+    current=type;
+    document.getElementById('surf-info').textContent='Surface: '+type;
+    const geo=new THREE.BufferGeometry();
+    const pos=[], col=[], nrm=[];
+    for(let i=0;i<=params.uSeg;i++){
+      for(let j=0;j<=params.vSeg;j++){
+        const u=i/params.uSeg, v=j/params.vSeg;
+        const p=surfaceFun(type,u,v);
+        pos.push(p.x,p.y,p.z);
+        const h=0.55+(p.z/20)*0.4;
+        const c=new THREE.Color().setHSL(h,0.7,0.55);
+        col.push(c.r,c.g,c.b);
+        nrm.push(0,1,0);
+      }
+    }
+    const idx=[];
+    for(let i=0;i<params.uSeg;i++) for(let j=0;j<params.vSeg;j++){
+      const a=i*(params.vSeg+1)+j, b=a+params.vSeg+1;
+      idx.push(a,b,a+1,b+1,b,a+1);
+    }
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    geo.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+    geo.setIndex(idx);
+    geo.computeVertexNormals();
+    const mat=new THREE.MeshStandardMaterial({vertexColors:true,side:THREE.DoubleSide,flatShading:true,roughness:0.4,metalness:0.2});
+    mesh=new THREE.Mesh(geo,mat);
+    scene.add(mesh);
+  }
+
+  function animate(){
+    requestAnimationFrame(animate);
+    if(mesh) mesh.rotation.y += 0.005;
+    controls.update();
+    renderer.render(scene,camera);
+  }
+  function onResize(){
+    camera.aspect=container.clientWidth/container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth,container.clientHeight);
+  }
+  views3D.surface={resize:onResize};
+  init();
+})();
+
+// ---------- GPU / Memory View ----------
+(function gpuView(){
+  let scene,camera,renderer,controls,levels=[],arrows=[],lambda=1;
+  const container=document.getElementById('gpu-canvas');
+  if(!container) return;
+
+  function init(){
+    scene=new THREE.Scene();
+    scene.background=new THREE.Color(0x0a0f19);
+    camera=new THREE.OrthographicCamera(-25,25,18,-18,0.1,200);
+    camera.position.set(0,0,40);
+    camera.lookAt(0,0,0);
+    renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+    renderer.setSize(container.clientWidth,container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    container.appendChild(renderer.domElement);
+    controls=new OrbitControls(camera,renderer.domElement);
+    controls.enableDamping=true;
+    const light=new THREE.DirectionalLight(0xffffff,1); light.position.set(10,20,10); scene.add(light);
+    scene.add(new THREE.AmbientLight(0xffffff,0.4));
+
+    const names=['Registers','L1 Cache','L2 Cache','L3 Cache','DRAM'];
+    const latencies=[1,4,12,40,200]; // cycles
+    const colors=[0x22d3ee,0x22d3ee,0x818cf8,0x818cf8,0xa78bfa];
+    const y=[16,8,0,-8,-16];
+
+    for(let i=0;i<5;i++){
+      const box=new THREE.Mesh(new THREE.BoxGeometry(14,2.5,14), new THREE.MeshStandardMaterial({color:colors[i],emissive:colors[i],emissiveIntensity:0.5}));
+      box.position.set(0,y[i],0);
+      scene.add(box);
+      levels.push({box,name:names[i],lat:latencies[i],y:y[i]});
+      if(i>0){
+        const geo=new THREE.BufferGeometry();
+        const pos=[0,y[i-1]+1.25,0, 0,y[i]-1.25,0];
+        geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+        const mat=new THREE.LineBasicMaterial({color:0x94a3b8,transparent:true,opacity:0.5});
+        const line=new THREE.Line(geo,mat);
+        scene.add(line);
+        arrows.push({line,from:y[i-1]+1.25,to:y[i]-1.25});
+      }
+    }
+    // label floats via HTML overlay (below canvas)
+    animate();
+    window.addEventListener('resize',onResize);
+    const inp=document.getElementById('gpu-lambda');
+    inp.addEventListener('input',(e)=>{lambda=parseFloat(e.target.value);updateLittle();});
+    updateLittle();
+  }
+
+  function updateLittle(){
+    // N = lambda * R ; use average latency ~ weighted
+    const avgLat=levels.reduce((s,l)=>s+l.lat,0)/levels.length;
+    const R=avgLat; // cycles
+    const N=lambda*R;
+    document.getElementById('gpu-lat').textContent=`Latency R: ${R.toFixed(0)} cycles`;
+    document.getElementById('gpu-n').textContent=`Outstanding N: ${N.toFixed(1)}`;
+    // scale arrow opacity by N saturation
+    arrows.forEach((ar,i)=>{
+      ar.line.material.opacity=0.3+0.4*Math.min(1,N/50);
+      ar.line.material.color.setHex(0x22d3ee);
+      ar.line.material.needsUpdate=true;
+    });
+  }
+
+  function animate(){
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene,camera);
+  }
+  function onResize(){
+    camera.left=-container.clientWidth/16; camera.right=container.clientWidth/16;
+    camera.top=container.clientHeight/16; camera.bottom=-container.clientHeight/16;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth,container.clientHeight);
+  }
+  views3D.gpu={resize:onResize};
+  init();
+})();
+
+// ---------- Parallel DAG View ----------
+(function parallelView(){
+  let scene,camera,renderer,controls,nodes=[],edges=[],lineMesh;
+  const container=document.getElementById('parallel-canvas');
+  if(!container) return;
+
+  function init(){
+    scene=new THREE.Scene();
+    scene.background=new THREE.Color(0x0a0f19);
+    camera=new THREE.PerspectiveCamera(50, container.clientWidth/container.clientHeight, 0.1, 200);
+    camera.position.set(0,0,50);
+    renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+    renderer.setSize(container.clientWidth,container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    container.appendChild(renderer.domElement);
+    controls=new OrbitControls(camera,renderer.domElement);
+    controls.enableDamping=true;
+    scene.add(new THREE.AmbientLight(0xffffff,0.5));
+    const dir=new THREE.DirectionalLight(0x22d3ee,1); dir.position.set(10,20,10); scene.add(dir);
+
+    generateDAG();
+    animate();
+    window.addEventListener('resize',onResize);
+    document.getElementById('dag-regen').addEventListener('click',generateDAG);
+  }
+
+  function generateDAG(){
+    nodes=[]; edges=[];
+    const layers=6; const perLayer=5;
+    let id=0;
+    const layerX=[-20,-12,-4,4,12,20];
+    for(let l=0;l<layers;l++){
+      for(let p=0;p<perLayer;p++){
+        nodes.push({id:id++,layer:l,x:layerX[l]+(Math.random()-0.5)*3,y:(p-(perLayer-1)/2)*4,z:(Math.random()-0.5)*6,depth:l});
+      }
+    }
+    // edges forward only
+    for(let l=0;l<layers-1;l++){
+      for(let i=0;i<perLayer;i++){
+        const a=l*perLayer+i;
+        const targets=Math.floor(Math.random()*3)+1;
+        for(let t=0;t<targets;t++){
+          const b=(l+1)*perLayer+Math.floor(Math.random()*perLayer);
+          edges.push({a,b});
+        }
+      }
+    }
+    // compute span via DP: longest path
+    const dist=new Array(nodes.length).fill(-Infinity);
+    for(let l=0;l<layers;l++){
+      const start=l*perLayer;
+      if(l===0) for(let i=0;i<perLayer;i++) dist[start+i]=1;
+      for(let i=0;i<perLayer;i++){
+        const ai=start+i; if(dist[ai]<0) continue;
+        edges.forEach(e=>{ if(e.a===ai) dist[e.b]=Math.max(dist[e.b],dist[ai]+1); });
+      }
+    }
+    const span=Math.max(...dist.slice((layers-1)*perLayer));
+    const work=nodes.length;
+    document.getElementById('dag-info').textContent=`T₁: ${work} · T∞: ${span} · Parallelism: ${(work/span).toFixed(2)}×`;
+
+    // edges geometry
+    const pos=[], col=[];
+    edges.forEach(e=>{
+      const A=nodes[e.a],B=nodes[e.b];
+      pos.push(A.x,A.y,A.z,B.x,B.y,B.z);
+      const c=new THREE.Color().setHSL(0.6,0.5,0.4);
+      col.push(c.r,c.g,c.b,c.r,c.g,c.b);
+    });
+    const geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    geo.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+    const mat=new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:0.35});
+    if(lineMesh){scene.remove(lineMesh);lineMesh.geometry.dispose();lineMesh.material.dispose();}
+    lineMesh=new THREE.LineSegments(geo,mat);
+    scene.add(lineMesh);
+
+    // nodes
+    const sphere=new THREE.SphereGeometry(0.5,12,12);
+    const dummy=new THREE.Object3D();
+    const inst=new THREE.InstancedMesh(sphere,[new THREE.MeshStandardMaterial({color:0x22d3ee}),new THREE.MeshStandardMaterial({color:0xa78bfa})],nodes.length);
+    nodes.forEach((n,i)=>{ dummy.position.set(n.x,n.y,n.z); dummy.updateMatrix(); inst.setMatrixAt(i,dummy.matrix); inst.setColorAt(i,new THREE.Color().setHSL(0.55+(n.depth/layers)*0.4,0.8,0.5)); });
+    inst.instanceMatrix.needsUpdate=true; inst.instanceColor.needsUpdate=true;
+    scene.add(inst);
+    window.__dagMesh=inst;
+  }
+
+  function animate(){
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene,camera);
+  }
+  function onResize(){
+    camera.aspect=container.clientWidth/container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth,container.clientHeight);
+  }
+  views3D.parallel={resize:onResize};
+  init();
+})();
+
+</script>
+</body>
+</html>

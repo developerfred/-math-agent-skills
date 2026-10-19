@@ -34,6 +34,10 @@
 - **Pressão de registradores vs ocupação GPU**: Modelo analítico para alocação ótima de registradores sob restrições de ocupação é um problema de otimização aberto. (Aberto)
 - **P vs NC**: Todo problema eficientemente solúvel em paralelo (NC) é igual a P? Questão fundamental de complexidade paralela, relacionada a P vs NP. (Aberto)
 
+## Atualização de 2026 — Navier–Stokes (Millennium Prize)
+
+Em setembro de 2026, a OpenAI anunciou uma proposta de solução para o Problema de Navier–Stokes Existência e Suavidade, com prova e formalização em Lean. A OpenAI declarou que **não reivindica o Prêmio do Milênio**. O Clay Mathematics Institute **não considera** propostas até pelo menos 2 anos após publicação. Portanto, o problema segue **aberto oficialmente**. Esse caso foi documentado em `skills/navier-stokes-millennium/skills.md` pelo ciclo dos 4 agentes (pesquisador, professor, aluno, QA).
+
 ## Como os agentes atuam sobre esses problemas
 
 1. **Pesquisador**: Levanta papers do arXiv e resultados parciais sobre o problema escolhido.

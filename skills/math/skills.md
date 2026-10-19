@@ -168,3 +168,6 @@ Core references consistent with this skill:
 - `skills/collatz-stopping-time/skills.md` — heurística de tempo de parada da Conjectura de Collatz (status: aberto/heurístico), gerada pelos agentes pesquisador, professor, aluno e QA.
 - `skills/parallel-gpu-memory/skills.md` — matemática de paralelismo, GPU e memória RAM (leis de Amdahl/Gustafson, modelo Roofline, AMAT, Little's Law, GEMM, problemas em aberto como Memory Wall e P vs NC), gerada pelos 4 agentes.
 - `skills/skills-graph/skills.md` — dynamic learning site on GitHub Pages with Three.js visualizations (graph networks, parametric surfaces, GPU memory hierarchy, parallel DAGs, multi-agent loop).
+- `skills/navier-stokes-millennium/skills.md` — Navier–Stokes Existence and Smoothness (Millennium Prize Problem), ciclo dos 4 agentes com atualização de setembro/2026 (OpenAI proposal não verificada; problema segue aberto oficialmente).
+- `skills/euler-equations-regularity/skills.md` — equações de Euler incompressíveis 3D, regularidade e explosão, derivado de Navier–Stokes.
+- `skills/blow-up-criteria-bkm/skills.md` — critério de Beale–Kato–Majda para explosão de vorticidade, derivado de Euler/Navier–Stokes.

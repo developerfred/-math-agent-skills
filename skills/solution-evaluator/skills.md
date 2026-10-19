@@ -26,7 +26,7 @@ The agent works alongside the 4-agent loop (Pesquisador → Professor → Aluno 
 
 ## 2. Evaluation Guidelines
 
-Every proposed solution must pass the following checks:
+Every proposed solution must pass the following checks. The evaluator first identifies which **proof method** (see `skills/proof-methods/skills.md`) is being used, then validates the structure accordingly.
 
 ### 2.1 Formal Correctness
 - [ ] All definitions are stated precisely (domains, codomains, assumptions).

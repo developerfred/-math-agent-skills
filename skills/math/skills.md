@@ -190,3 +190,4 @@ Core references consistent with this skill:
 - `skills/yang-mills-mass-gap/skills.md` — Yang–Mills Existence and Mass Gap (Millennium Prize, aberto desde 2000), ciclo dos 4 agentes com lattice QCD, confinamento e 4 problemas derivados.
 - `skills/hodge-conjecture/skills.md` — Conjectura de Hodge (Millennium Prize, aberto desde 1950), ciclo dos 4 agentes com teoria de Hodge, ciclos algébricos e 4 problemas derivados.
 - `skills/birch-swinnerton-dyer/skills.md` — Conjectura de Birch–Swinnerton-Dyer (Millennium Prize, aberto desde 1960s), ciclo dos 4 agentes com curvas elípticas, função L e 4 problemas derivados.
+- `skills/solution-evaluator/skills.md` — Solution Evaluator and Corrector Agent: validates proposed solutions, follows strict evaluation guidelines, and corrects incorrect or incomplete solutions before commit.

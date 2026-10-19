@@ -171,3 +171,8 @@ Core references consistent with this skill:
 - `skills/navier-stokes-millennium/skills.md` — Navier–Stokes Existence and Smoothness (Millennium Prize Problem), ciclo dos 4 agentes com atualização de setembro/2026 (OpenAI proposal não verificada; problema segue aberto oficialmente).
 - `skills/euler-equations-regularity/skills.md` — equações de Euler incompressíveis 3D, regularidade e explosão, derivado de Navier–Stokes.
 - `skills/blow-up-criteria-bkm/skills.md` — critério de Beale–Kato–Majda para explosão de vorticidade, derivado de Euler/Navier–Stokes.
+- `skills/p-vs-nc-fluids-connection/skills.md` — conexão entre P vs NC e resolução paralela de equações de fluidos; gera 4 problemas derivados.
+- `skills/p-vs-nc-navier-stokes-parallel/skills.md` — Navier–Stokes decision problem é P-completo ou em NC? (derivado)
+- `skills/euler-blowup-parallel-verification/skills.md` — verificar explosão de Euler está em NC? (derivado)
+- `skills/bkm-criterion-parallel-complexity/skills.md` — complexidade paralela do integral BKM (derivado)
+- `skills/fluid-simulation-space-time/skills.md` — métodos espaço-tempo (Parareal) colocam fluidos em NC? (derivado)

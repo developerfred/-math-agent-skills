@@ -33,6 +33,7 @@
 - **Paralelismo irregular**: Algoritmos de grafo (BFS, PageRank, SpMV) têm desbalanceamento de carga; limites teóricos para travessia paralela work-efficient permanecem abertos para muitas classes. (Aberto)
 - **Pressão de registradores vs ocupação GPU**: Modelo analítico para alocação ótima de registradores sob restrições de ocupação é um problema de otimização aberto. (Aberto)
 - **P vs NC**: Todo problema eficientemente solúvel em paralelo (NC) é igual a P? Questão fundamental de complexidade paralela, relacionada a P vs NP. (Aberto)
+- **P vs NC × Fluidos**: A simulação de Navier–Stokes/Euler é P-completa ou está em NC? Conexão investigada em `skills/p-vs-nc-fluids-connection/skills.md` com 4 problemas derivados (Navier–Stokes P-completo, verificação de explosão de Euler, integral BKM paralela, métodos espaço-tempo/Parareal).
 
 ## Atualização de 2026 — Navier–Stokes (Millennium Prize)
 

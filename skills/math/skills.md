@@ -182,3 +182,7 @@ Core references consistent with this skill:
 - `skills/chronology-protection/skills.md` — conjectura de Hawking, polarização do vácuo, desigualdades quânticas.
 - `skills/spacetime-simulation-complexity/skills.md` — simular espaço-tempos com CTCs está em NC ou é P-completo? (Aaronson–Watrous).
 - `skills/riemann-hypothesis/skills.md` — Hipótese de Riemann (Millennium Prize, aberto desde 1859), ciclo dos 4 agentes com estado-da-arte, testes numéricos de zeros e 4 problemas derivados.
+- `skills/riemann-critical-line-zeros/skills.md` — verificação numérica distribuída de zeros na linha crítica até altura T grande; análise de gaps entre zeros consecutivos (derivado de Riemann).
+- `skills/riemann-prime-counting-error/skills.md` — limites explícitos para |π(x) − Li(x)| sob RH e sem RH; fórmula explícita de von Mangoldt (derivado de Riemann).
+- `skills/riemann-l-functions-generalization/skills.md` — Hipótese de Riemann Generalizada para funções L de Dirichlet; primos em progressões aritméticas (derivado de Riemann).
+- `skills/riemann-quantum-chaos-connection/skills.md` — lei de Montgomery–Odlyzko; correlação entre zeros da zeta e matrizes aleatórias GUE; conjectura de Hilbert–Pólya (derivado de Riemann).

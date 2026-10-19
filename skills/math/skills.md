@@ -186,3 +186,7 @@ Core references consistent with this skill:
 - `skills/riemann-prime-counting-error/skills.md` — limites explícitos para |π(x) − Li(x)| sob RH e sem RH; fórmula explícita de von Mangoldt (derivado de Riemann).
 - `skills/riemann-l-functions-generalization/skills.md` — Hipótese de Riemann Generalizada para funções L de Dirichlet; primos em progressões aritméticas (derivado de Riemann).
 - `skills/riemann-quantum-chaos-connection/skills.md` — lei de Montgomery–Odlyzko; correlação entre zeros da zeta e matrizes aleatórias GUE; conjectura de Hilbert–Pólya (derivado de Riemann).
+- `skills/p-vs-np/skills.md` — P versus NP (Millennium Prize, aberto desde 1971), ciclo dos 4 agentes com teorema de Cook–Levin, barreiras de prova e 4 problemas derivados.
+- `skills/yang-mills-mass-gap/skills.md` — Yang–Mills Existence and Mass Gap (Millennium Prize, aberto desde 2000), ciclo dos 4 agentes com lattice QCD, confinamento e 4 problemas derivados.
+- `skills/hodge-conjecture/skills.md` — Conjectura de Hodge (Millennium Prize, aberto desde 1950), ciclo dos 4 agentes com teoria de Hodge, ciclos algébricos e 4 problemas derivados.
+- `skills/birch-swinnerton-dyer/skills.md` — Conjectura de Birch–Swinnerton-Dyer (Millennium Prize, aberto desde 1960s), ciclo dos 4 agentes com curvas elípticas, função L e 4 problemas derivados.

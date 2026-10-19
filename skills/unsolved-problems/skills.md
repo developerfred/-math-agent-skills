@@ -39,6 +39,17 @@
 
 Em setembro de 2026, a OpenAI anunciou uma proposta de solução para o Problema de Navier–Stokes Existência e Suavidade, com prova e formalização em Lean. A OpenAI declarou que **não reivindica o Prêmio do Milênio**. O Clay Mathematics Institute **não considera** propostas até pelo menos 2 anos após publicação. Portanto, o problema segue **aberto oficialmente**. Esse caso foi documentado em `skills/navier-stokes-millennium/skills.md` pelo ciclo dos 4 agentes (pesquisador, professor, aluno, QA).
 
+## Millennium Prize Problems — Clay Mathematics Institute
+
+- **Hipótese de Riemann (1859)**: Todos os zeros não triviais da função zeta ζ(s) têm parte real 1/2? (Aberto desde 1859).
+- **P vs NP**: Se uma solução pode ser verificada rapidamente, pode ser resolvida rapidamente? P = NP? (Aberto).
+- **Navier–Stokes Existência e Suavidade**: Existem soluções suaves globalmente definidas para as equações de Navier–Stokes incompressíveis em 3D? (Aberto; documentado em `skills/navier-stokes-millennium/skills.md`).
+- **Yang–Mills e Espaço de Massa**: Existe uma teoria quântica de Yang–Mills com espaço de massa positivo? (Aberto).
+- **Conjectura de Hodge**: Toda classe de Hodge é uma combinação racional de classes de ciclos algébricos? (Aberto).
+- **Conjectura de Birch e Swinnerton-Dyer**: O posto do grupo de pontos racionais de uma curva elíptica é igual à ordem de anulação de sua função L em s = 1? (Aberto).
+
+**Nota:** A Conjectura de Poincaré foi resolvida por Grigori Perelman (2002–2003). Catálogo completo e ciclo dos 4 agentes em `skills/millennium-prize-problems/skills.md`.
+
 ## Viagem no Tempo e Teleportação — Problemas Teoréticos
 
 - **CTCs (Gödel, Tipler, wormholes)**: métricas da relatividade geral admitem curvas fechadas tipo-tempo? Exigem matéria exótica (violação da NEC). Documentado em `skills/closed-timelike-curves/skills.md`.

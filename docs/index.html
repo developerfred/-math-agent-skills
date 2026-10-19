@@ -19,6 +19,53 @@
     --danger:#f87171;
     --radius:12px;
     --transition:.35s cubic-bezier(.23,1,.32,1);
+    --paper:#fdfbf7;
+    --paper-ink:#1a1a1a;
+    --paper-ink-dim:#4a4a4a;
+    --paper-border:#d4c3a5;
+  }
+  /* ---------- Manuscript View ---------- */
+  .manuscript-wrapper{
+    position:relative;width:100%;max-width:900px;margin:0 auto;padding:20px;
+  }
+  .manuscript-sheet{
+    position:relative;width:100%;height:520px;background:var(--paper);
+    border:2px solid var(--paper-border);border-radius:4px;
+    box-shadow:0 10px 40px rgba(0,0,0,.35), inset 0 0 20px rgba(0,0,0,.05);
+    overflow:hidden;display:flex;align-items:flex-start;justify-content:flex-start;
+    padding:46px 56px;box-sizing:border-box;gap:10px;
+  }
+  .manuscript-paper-line{
+    position:absolute;left:0;right:0;height:1.2em;border-bottom:1px solid rgba(100,140,200,.15);
+  }
+  .manuscript-paper-line:nth-child(odd){border-color:rgba(200,100,100,.12)}
+  .manuscript-text{
+    font-family:'Courier New',Courier,monospace;font-size:16px;color:var(--paper-ink);
+    line-height:1.45;white-space:pre-wrap;word-wrap:break-word;
+    position:relative;z-index:2;margin:0;
+  }
+  .manuscript-cursor{
+    display:inline-block;width:8px;height:1.45em;background:var(--paper-ink);
+    animation:blink 1s infinite;vertical-align:bottom;margin-left:2px;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  .manuscript-controls{
+    margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  }
+  .manuscript-btn{
+    background:var(--panel);border:1px solid var(--border);color:var(--text);
+    padding:8px 14px;border-radius:8px;font-size:.85rem;cursor:pointer;transition:.2s;
+  }
+  .manuscript-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .manuscript-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+  .manuscript-view-mode{
+    font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;
+    border:1px solid var(--border);padding:4px 10px;border-radius:6px;
+  }
+  .manuscript-content{display:none}
+  .manuscript-content.active{display:block}
+  .manuscript-empty{
+    font-style:italic;color:var(--paper-ink-dim);font-size:14px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -197,6 +244,8 @@
       <li><a href="#" data-view="teleport"><span style="color:var(--accent-3)">▸</span> Quantum Teleportation</a></li>
       <li><a href="#" data-view="chronology"><span style="color:var(--accent-3)">▸</span> Chronology Protection</a></li>
       <li><a href="#" data-view="spacetime"><span style="color:var(--accent-3)">▸</span> Spacetime Complexity</a></li>
+      <li><a href="#" data-view="delusional"><span style="color:var(--danger)">▸</span> Delusional Agent</a></li>
+      <li><a href="#" data-view="manuscript"><span style="color:var(--paper-ink)">▸</span> Manuscript View</a></li>
     </ul>
     <h3>Open Problems</h3>
     <ul>
@@ -231,6 +280,8 @@
       <button data-view="teleport">Teleport</button>
       <button data-view="chronology">Chronology</button>
       <button data-view="spacetime">Spacetime</button>
+      <button data-view="delusional">Delusional</button>
+      <button data-view="manuscript">Manuscript</button>
     </div>
   </header>
 
@@ -240,10 +291,10 @@
       <h1>Dynamic Mathematics<span class="tag">Agentic Learning</span></h1>
       <p class="intro">Public repository of agent skills for pure and applied mathematics. Built for agentic systems using a <strong>4-agent rebuttal loop</strong>: Pesquisador → Professor → Aluno → QA → new skill.</p>
       <div class="stats">
-        <div class="stat"><div class="val">15</div><div class="lab">Agent Skills</div></div>
-        <div class="stat"><div class="val">4</div><div class="lab">Agents in Loop</div></div>
-        <div class="stat"><div class="val">60+</div><div class="lab">Agent Deliveries</div></div>
-        <div class="stat"><div class="val">12</div><div class="lab">3D Visualizations</div></div>
+        <div class="stat"><div class="val">45+</div><div class="lab">Agent Skills</div></div>
+        <div class="stat"><div class="val">5</div><div class="lab">Agents in Loop</div></div>
+        <div class="stat"><div class="val">100+</div><div class="lab">Agent Deliveries</div></div>
+        <div class="stat"><div class="val">14</div><div class="lab">3D Visualizations</div></div>
       </div>
       <div class="grid">
         <div class="card">
@@ -265,6 +316,11 @@
           <h3>🛡️ QA</h3>
           <p>Contesta teorias, busca contra-exemplos e casos extremos, valida rigor formal e reprodutibilidade numérica.</p>
           <div class="actions"><button>Ver detalhes</button></div>
+        </div>
+        <div class="card">
+          <h3>🌀 Delusional</h3>
+          <p>Generates speculative, unconventional "crazy" mathematical hypotheses. Hands them to the 4-agent loop for validation or rejection.</p>
+          <div class="actions"><button data-view="delusional">Explore Delusional</button></div>
         </div>
       </div>
       <div class="card" style="grid-column:1/-1">
@@ -485,6 +541,125 @@
         <button id="st-3p1">3+1 ADM Evolution</button>
         <button id="st-parareal">Parareal Time</button>
         <span id="st-info" style="color:var(--text-dim);font-size:.8rem;margin-left:auto">Status: Open</span>
+      </div>
+    </section>
+
+    <!-- DELUSIONAL AGENT -->
+    <section id="view-delusional" class="page">
+      <h1>Delusional Agent<span class="tag">Speculative Mathematics</span></h1>
+      <p class="intro">The Delusional Agent generates "crazy" mathematical hypotheses — speculative, unconventional, high-risk ideas that mainstream mathematics avoids. Every idea is then handed to the standard 4-agent loop (Pesquisador → Professor → Aluno → QA → Solution Evaluator) for validation or rejection.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>🌀 Prime Numbers as Consciousness Signals</h3>
+          <p><strong>Hypothesis:</strong> The zeros of the Riemann zeta function encode a message from a higher-dimensional intelligence.</p>
+          <p><strong>Math kernel:</strong> Zeta zeros show GUE statistics (Keating–Snaith). <strong>Rejected:</strong> supernatural claim.</p>
+          <span class="manuscript-view-mode">Status: REJECTED by QA</span>
+        </div>
+        <div class="card">
+          <h3>🌀 Navier–Stokes as Time Machine</h3>
+          <p><strong>Hypothesis:</strong> Finite-time blow-up in fluid dynamics creates a traversable closed timelike curve.</p>
+          <p><strong>Math kernel:</strong> NS blow-up (Millennium) + CTC metrics (GR). <strong>Retained:</strong> analogy only.</p>
+          <span class="manuscript-view-mode">Status: RETAINED as analogy</span>
+        </div>
+        <div class="card">
+          <h3>🌀 P = NP via Quantum Brain</h3>
+          <p><strong>Hypothesis:</strong> P = NP is true but inaccessible to classical brains; quantum computation in the brain solves NP instantly.</p>
+          <p><strong>Math kernel:</strong> P vs NP + quantum information. <strong>Rejected:</strong> no mechanism.</p>
+          <span class="manuscript-view-mode">Status: REJECTED by QA</span>
+        </div>
+        <div class="card">
+          <h3>🌀 Elliptic Curves as Teleportation Portals</h3>
+          <p><strong>Hypothesis:</strong> Rational points on elliptic curves correspond to quantum teleportation states; BSD rank = teleportation bandwidth.</p>
+          <p><strong>Math kernel:</strong> BSD conjecture + quantum teleportation. <strong>Rejected:</strong> no information-theoretic link.</p>
+          <span class="manuscript-view-mode">Status: REJECTED by QA</span>
+        </div>
+      </div>
+      <p style="color:var(--text-dim);font-size:.85rem;margin-top:14px"><strong>Safety:</strong> All delusional ideas are speculative fiction-grade mathematics. Nothing is claimed as true, proven, or physically realizable.</p>
+    </section>
+
+    <!-- MANUSCRIPT VIEW -->
+    <section id="view-manuscript" class="page">
+      <h1>Manuscript View<span class="tag">Typewriter / Blank Paper</span></h1>
+      <p class="intro">Conjecture solutions written on a blank sheet with a typewriter/manuscript font. Choose how you want to view the solution below.</p>
+
+      <div class="manuscript-wrapper">
+        <div class="manuscript-sheet" id="manuscript-sheet">
+          <!-- Paper lines (visual background) -->
+          <div class="manuscript-paper-line" style="top:46px"></div>
+          <div class="manuscript-paper-line" style="top:66px"></div>
+          <div class="manuscript-paper-line" style="top:86px"></div>
+          <div class="manuscript-paper-line" style="top:106px"></div>
+          <div class="manuscript-paper-line" style="top:126px"></div>
+          <div class="manuscript-paper-line" style="top:146px"></div>
+          <div class="manuscript-paper-line" style="top:166px"></div>
+          <div class="manuscript-paper-line" style="top:186px"></div>
+          <div class="manuscript-paper-line" style="top:206px"></div>
+          <div class="manuscript-paper-line" style="top:226px"></div>
+          <div class="manuscript-paper-line" style="top:246px"></div>
+          <div class="manuscript-paper-line" style="top:266px"></div>
+          <div class="manuscript-paper-line" style="top:286px"></div>
+          <div class="manuscript-paper-line" style="top:306px"></div>
+          <div class="manuscript-paper-line" style="top:326px"></div>
+          <div class="manuscript-paper-line" style="top:346px"></div>
+          <div class="manuscript-paper-line" style="top:366px"></div>
+          <div class="manuscript-paper-line" style="top:386px"></div>
+          <div class="manuscript-paper-line" style="top:406px"></div>
+          <div class="manuscript-paper-line" style="top:426px"></div>
+          <div class="manuscript-paper-line" style="top:446px"></div>
+          <div class="manuscript-paper-line" style="top:466px"></div>
+          <div class="manuscript-paper-line" style="top:486px"></div>
+
+          <!-- Typewriter text -->
+          <div class="manuscript-text" id="manuscript-text">
+Riemann Hypothesis — Attempted Proof Draft
+=========================================
+
+Let zeta(s) = sum_{n=1}^{infty} n^{-s} for Re(s) > 1,
+extended by analytic continuation to C \ {1}.
+
+Conjecture: All non-trivial zeros rho of zeta(s) satisfy
+Re(rho) = 1/2.
+
+Approach:
+1. Assume there exists a zero rho = beta + i*gamma with beta != 1/2.
+2. By the functional equation, zeta(s) = zeta(1-s) up to factors,
+   so if beta is a zero, then 1-beta is also a zero.
+3. Consider the explicit formula for psi(x):
+      psi(x) = x - sum_{rho} x^{rho}/rho - log(2*pi) - 1/2 log(1 - x^{-2})
+   The term x^{rho} = x^{beta} * x^{i*gamma} has magnitude x^{beta}.
+4. If beta > 1/2 for some zero, the error term grows like x^{beta},
+   contradicting the known bound psi(x) = x + O(x^{1/2 + epsilon})
+   *conditional on RH itself* — circular reasoning.
+5. Therefore no such beta > 1/2 can exist *unless* RH is false,
+   which is what we are trying to prove.
+
+Status: UNRESOLVED. This draft contains circular reasoning
+(step 4 assumes the conclusion). Returned to Professor for
+reformulation. QA verdict: REJECTED — not a valid proof.
+
+                — codingsh, codingsh@pm.me
+                — Math Agent Skills Repository
+          </div>
+          <span class="manuscript-cursor" id="manuscript-cursor"></span>
+        </div>
+
+        <div class="manuscript-controls">
+          <button class="manuscript-btn active" data-mode="typewriter">Typewriter</button>
+          <button class="manuscript-btn" data-mode="handwritten">Handwritten</button>
+          <button class="manuscript-btn" data-mode="printed">Printed</button>
+          <span class="manuscript-view-mode" id="manuscript-mode-label">Mode: Typewriter</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h3>How It Works</h3>
+        <p>The Manuscript View renders conjecture solutions on a virtual blank sheet of paper. Use the buttons above to switch between:</p>
+        <ul style="color:var(--text-dim);font-size:.85rem;margin-top:8px;line-height:1.6">
+          <li><strong>Typewriter</strong> — Monospace Courier font, classic typewriter look.</li>
+          <li><strong>Handwritten</strong> — Cursive-style font, simulated ink on paper.</li>
+          <li><strong>Printed</strong> — Serif book font, clean academic layout.</li>
+        </ul>
+        <p style="color:var(--text-dim);font-size:.8rem;margin-top:10px">Content is drawn from validated skills in the repository. Each solution includes agent verdicts (Pesquisador, Professor, Aluno, QA, Solution Evaluator).</p>
       </div>
     </section>
 
@@ -1060,6 +1235,85 @@ function loop(renderFn){
     renderer.setSize(el.clientWidth,el.clientHeight);
   });
   views3D.spacetime={resize:()=>{}};
+})();
+
+// ---------- Manuscript View Typewriter ----------
+(function(){
+  const textEl=document.getElementById('manuscript-text');
+  const cursorEl=document.getElementById('manuscript-cursor');
+  const modeBtns=document.querySelectorAll('.manuscript-btn');
+  const modeLabel=document.getElementById('manuscript-mode-label');
+  const sheet=document.getElementById('manuscript-sheet');
+  if(!textEl) return;
+
+  const fullText=textEl.textContent;
+  textEl.textContent='';
+  let i=0;
+  let isTyping=true;
+
+  function typeNext(){
+    if(!isTyping) return;
+    if(i<fullText.length){
+      textEl.textContent+=fullText.charAt(i);
+      i++;
+      setTimeout(typeNext, 35 + Math.random()*40);
+    } else {
+      cursorEl.style.display='none';
+    }
+  }
+
+  // Start typing when manuscript view is shown
+  const origShowView=window.showView;
+  window.showView=function(id){
+    origShowView(id);
+    if(id==='manuscript'){
+      textEl.textContent='';
+      i=0;
+      cursorEl.style.display='inline-block';
+      isTyping=true;
+      typeNext();
+    }
+  };
+
+  // Mode switching
+  modeBtns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      modeBtns.forEach(b=>{
+        b.classList.remove('active');
+        b.style.background='';
+        b.style.color='';
+      });
+      btn.classList.add('active');
+      const mode=btn.dataset.mode;
+      modeLabel.textContent='Mode: '+mode.charAt(0).toUpperCase()+mode.slice(1);
+
+      if(mode==='typewriter'){
+        textEl.style.fontFamily="'Courier New',Courier,monospace";
+        textEl.style.fontSize='16px';
+        textEl.style.color='var(--paper-ink)';
+        textEl.style.background='';
+        textEl.style.fontStyle='';
+        textEl.style.fontWeight='';
+        sheet.style.background='var(--paper)';
+      } else if(mode==='handwritten'){
+        textEl.style.fontFamily="'Comic Sans MS','Chalkboard SE',cursive";
+        textEl.style.fontSize='18px';
+        textEl.style.color='#2d2d2d';
+        textEl.style.background='rgba(255,255,255,.4)';
+        textEl.style.fontStyle='italic';
+        textEl.style.fontWeight='600';
+        sheet.style.background='#f7f3e8';
+      } else if(mode==='printed'){
+        textEl.style.fontFamily="'Georgia','Times New Roman',serif";
+        textEl.style.fontSize='15px';
+        textEl.style.color='#000';
+        textEl.style.background='';
+        textEl.style.fontStyle='';
+        textEl.style.fontWeight='400';
+        sheet.style.background='#fafafa';
+      }
+    });
+  });
 })();
 </script>
 </body>

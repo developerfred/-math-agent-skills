@@ -191,3 +191,4 @@ Core references consistent with this skill:
 - `skills/hodge-conjecture/skills.md` — Conjectura de Hodge (Millennium Prize, aberto desde 1950), ciclo dos 4 agentes com teoria de Hodge, ciclos algébricos e 4 problemas derivados.
 - `skills/birch-swinnerton-dyer/skills.md` — Conjectura de Birch–Swinnerton-Dyer (Millennium Prize, aberto desde 1960s), ciclo dos 4 agentes com curvas elípticas, função L e 4 problemas derivados.
 - `skills/solution-evaluator/skills.md` — Solution Evaluator and Corrector Agent: validates proposed solutions, follows strict evaluation guidelines, and corrects incorrect or incomplete solutions before commit.
+- `skills/proof-methods/skills.md` — Mathematical Proof Methods catalog: direct, contrapositive, contradiction, induction, construction, cases, and exhaustion. Used by the Solution Evaluator to validate proof structure.

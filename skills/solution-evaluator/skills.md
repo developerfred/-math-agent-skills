@@ -35,9 +35,20 @@ Every proposed solution must pass the following checks. The evaluator first iden
 - [ ] Variables are consistently typed (real, complex, integer, matrix, etc.).
 - [ ] Dimensional analysis holds (if applicable).
 
-### 2.2 Proof Structure
+### 2.2 Proof Structure and Method Validation
+
+The evaluator checks that the proof method is correctly identified and applied:
+
 - [ ] The theorem statement is clear (hypotheses and conclusion).
-- [ ] The proof method is identified (direct, contradiction, contrapositive, induction, construction).
+- [ ] The proof method is identified: direct, contrapositive, contradiction, induction, construction, cases, or exhaustion.
+- [ ] The structure matches the chosen method (see `skills/proof-methods/skills.md`):
+  - **Direct:** Assumption P → logical steps → conclusion Q.
+  - **Contrapositive:** Assumption ¬Q → logical steps → conclusion ¬P.
+  - **Contradiction:** Assumption ¬P → contradiction R ∧ ¬R → conclusion P.
+  - **Induction:** Base case verified; inductive hypothesis stated; inductive step uses hypothesis.
+  - **Construction:** Object explicitly constructed; property verified.
+  - **Cases:** Exhaustive partition; each case proven.
+  - **Exhaustion:** Finite domain; every possibility checked.
 - [ ] Base case and inductive step are present (if induction is used).
 - [ ] Boundary cases are covered (empty sets, zero, infinity, singularities).
 - [ ] The conclusion follows necessarily from the premises.

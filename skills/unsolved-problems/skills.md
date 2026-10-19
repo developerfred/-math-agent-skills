@@ -1,0 +1,41 @@
+# Unsolved Mathematics Problems Skill
+
+**id:** unsolved-problems  
+**name:** Open Problems in Mathematics  
+**description:** Catálogo de problemas matemáticos ainda não resolvidos, usados como desafios para o ciclo multi-agente (pesquisa → ensino → aprendizado → contestação → registro). Conteúdo esteducional e teórico.  
+**author:** codingsh <codingsh@pm.me>  
+**triggers:** "unsolved", "open problem", "millennium", "conjecture", "challenge", "riddle", "proof", "collatz", "goldbach", "riemann", "navier-stokes", "p vs np"
+
+---
+
+## Millennium Prize Problems (Clay Mathematics Institute)
+
+1. **P vs NP**: Todo problema cuja solução pode ser verificada rapidamente pode ser resolvido rapidamente? (Aberto)
+2. **Hipótese de Riemann**: Todos os zeros não triviais da função zeta de Riemann têm parte real 1/2? (Aberto)
+3. **Conjectura de Birch e Swinnerton-Dyer**: Relaciona pontos racionais de curvas elípticas com o comportamento da função L associada. (Aberto)
+4. **Equação de Navier-Stokes**: Existem soluções suaves e globalmente definidas para todas as condições iniciais em 3D? (Aberto)
+5. **Conjectura de Hodge**: Relação entre ciclos algébricos e classes de cohomologia em variedades projetivas não singulares. (Aberto)
+6. **Teorema de Poincaré**: Toda variedade fechada 3-meromorfa simplesmente conexa é homeomorfa à 3-esfera. **Resolvida** por Grigori Perelman (2002-2003).
+7. **Teoria de Yang-Mills e espaço de massa**: Existe uma teoria quântica de Yang-Mills com espaço de massa positivo? (Aberto)
+
+## Outros desafios clássicos em aberto
+
+- **Conjectura de Goldbach**: Todo inteiro par maior que 2 é soma de dois primos? (Aberto; verificado computacionalmente até grandes limites).
+- **Conjectura dos primos gêmeos**: Existem infinitos pares (p, p+2) de primos? (Aberto; progresso com Zhang/Maynard/Tao em gaps limitados).
+- **Conjectura de Collatz (3n+1)**: Toda sequência definida por n → n/2 (par) ou 3n+1 (ímpar) eventualmente chega a 1? (Aberto).
+- **Conjectura de Legendre**: Entre n² e (n+1)² sempre há um primo? (Aberto).
+- **Conjectura de Brocard**: n! + 1 = m² tem apenas soluções (4,5), (5,11), (7,71)? (Aberto).
+
+## Como os agentes atuam sobre esses problemas
+
+1. **Pesquisador**: Levanta papers do arXiv e resultados parciais sobre o problema escolhido.
+2. **Professor**: Estrutura o enunciado, histórico e tentativas famosas de forma didática.
+3. **Aluno**: Deriva casos particulares, testa numericamente, aponta o que não entende.
+4. **QA**: Busca contra-exemplos computacionais, valida razões pelas quais tentativas conhecidas falharam.
+5. **Registro**: Cada avanço ou heurística válida gera um novo skill em `skills/` (ex: `skills/riemann-heuristic/skills.md`).
+
+## Regras de uso
+
+- Esses problemas são desafios intelectuais educacionais.
+- Nenhum agente deve afirmar ter "resolvido" um problema do Prêmio do Milênio sem revisão por pares externa e publicação aceita.
+- O registro no repositório é heurístico/documental, não substitui revisão científica formal.
